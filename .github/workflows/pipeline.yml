@@ -2,6 +2,9 @@ name: Pipeline
 
 on: [push]
 
+env:
+    ARTIFACT_NAME: my_artifact
+
 jobs:
     test:
         name: Test
@@ -13,5 +16,16 @@ jobs:
             - name: run program
               run: python main.py
 
-   
-# lsjdf
+    build:
+        name: Build
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: upload artifact
+              uses: actions/upload-artifact@v2
+              with:
+                name: ${{ env.ARTIFACT_NAME }}
+                path: .
